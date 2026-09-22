@@ -5,7 +5,7 @@ turns a sentence into structured tool calls. This binds straight to the native e
 Function & Memory API (final in **Java 22**), so there is no JNI glue, no C to compile, and Python is not
 required at build time or runtime.
 
-Not affiliated with Cactus Compute. Needle 3 itself, and the weights this SDK downloads, are Cactus's.
+**Not affiliated with Cactus Compute. Needle 3 itself, and the weights this SDK downloads, are Cactus's**.
 
 ## What this gives you
 
