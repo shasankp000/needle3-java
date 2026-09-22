@@ -217,7 +217,7 @@ file for how to trigger it.
 This SDK is licensed under the [Apache License, Version 2.0](LICENSE).
 
 Needle 3 itself, the engine binaries, and the model weights are Cactus Compute's; this SDK never bundles or
-redistributes them — `NeedleAssets` downloads them directly from Cactus's own Hugging Face repository
+redistributes them -- `NeedleAssets` downloads them directly from Cactus's own Hugging Face repository
 ([`Cactus-Compute/needle3`](https://huggingface.co/Cactus-Compute/needle3)) at runtime, on the end user's
 machine. As of this writing, Cactus publishes both the [`needle` engine repo](https://github.com/cactus-compute/needle)
 and the `needle3` model weights under Apache-2.0 as well, but that's their license to change; check it yourself
