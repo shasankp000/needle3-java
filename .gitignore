@@ -1,0 +1,35 @@
+# Maven build output
+target/
+
+# Manual (non-Maven) build output — see README "Build and run"
+out/
+
+# Compiled class files, wherever they land
+*.class
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+.factorypath
+nbproject/
+nb-configuration.xml
+
+# Machine-specific artifacts (absolute paths tied to this checkout)
+cp.txt
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local env / secrets, if ever added
+.env
+.env.*
