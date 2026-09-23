@@ -33,3 +33,5 @@ Thumbs.db
 # Local env / secrets, if ever added
 .env
 .env.*
+
+*.so 
