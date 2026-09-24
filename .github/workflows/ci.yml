@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+  schedule:
+    # Weekly, so the full behavioural matrix (real engine + weights) gets exercised even with no manual
+    # trigger, without running it on every push.
+    - cron: "0 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    name: Unit tests (no network, no real engine)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "22"
+          cache: maven
+
+      - name: mvn test
+        run: mvn -B test
+
+  full-matrix:
+    name: Behavioural tests (real engine)
+    # Manual (Actions tab -> "Run workflow") or the weekly schedule above -- not on every push/PR, since
+    # every OS/arch leg here downloads the real engine + weights from Cactus's Hugging Face repo.
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux-x86_64
+          - os: ubuntu-24.04-arm
+            label: linux-arm64
+          - os: windows-latest
+            label: windows-x86_64
+          - os: macos-13
+            label: macos-x86_64
+          - os: macos-14
+            label: macos-arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "22"
+          cache: maven
+
+      - name: Real download test (throwaway cache dir)
+        env:
+          NEEDLE_NET_TESTS: "1"
+        run: mvn -B test -Dtest=NeedleDownloadIT
+
+      - name: Prime the default asset cache (used by the behavioural tests below)
+        env:
+          NEEDLE_CI_PRIME: "1"
+        run: mvn -B test -Dtest=CiPrimeCacheIT
+
+      - name: Behavioural tests
+        run: >-
+          mvn -B test
+          -Dtest=NeedleIT,NeedleChainIT,NeedleMultiCallIT,NeedleTimerIT,NeedleBadWeightsIT,NeedleOversizeIT,NeedleTemporalGroundingIT,NeedleExtractIT,NeedleToolIndexIT
